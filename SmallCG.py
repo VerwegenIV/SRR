@@ -4,7 +4,7 @@ import math
 
 def make_costdict(file):
     # Pick an instance
-    data = open('Instances/'+file[:-3])
+    data = open('Instances/' + file[:-3])
     # Since the instant is read as a string, we need to manually interpret it
     data = data.read()
     data = data.split('\n')
@@ -15,13 +15,13 @@ def make_costdict(file):
     # Every entry in data is a string that contains the endpoints of an edge, a round number and the value 1.
     for d in data:
         # split them on spaces
-        l = re.split(' ', d)
+        entries = re.split(' ', d)
         # make an edge entry with e[0] = left endpoint; e[1] = right endpoint; e[2] = round.
         e = []
         # for every non space entry
-        for num in range(len(l)):
-            if l[num]:
-                e.append(l[num])
+        for num in range(len(entries)):
+            if entries[num]:
+                e.append(entries[num])
         # Make sure that the left endpoint is always smaller
         if int(e[0]) < int(e[1]):
             costdict[(int(e[0]), int(e[1]), int(e[2]))] = 1
@@ -34,16 +34,18 @@ def make_costdict(file):
 
     return costdict
 
+
 # Get the parameters of the loaded model
 def get_params(model):
-    n = int(math.sqrt(2*len(model.getConstrs())+2.25) - 0.5)
+    n = int(math.sqrt(2 * len(model.getConstrs()) + 2.25) - 0.5)
     edges = []
-    for i in range(n-1):
-        for j in range(i+1,n):
-            edges.append((i,j))
-    return n,edges
+    for i in range(n - 1):
+        for j in range(i + 1, n):
+            edges.append((i, j))
+    return n, edges
 
-def construct_vardict(model,edges):
+
+def construct_vardict(model, edges):
     # Initialise two dicts: one for every variable and one for positive variables
     vardict = dict()
     pos_vardict = dict()
@@ -55,6 +57,7 @@ def construct_vardict(model,edges):
         # For a loaded in model, some non-variables are recognised as variables, this if-statement filters those out
         if c.size() <= 1:
             continue
+        r = 0
         # For every constraint the variable is in
         for i in range(c.size()):
             name = c.getConstr(i).ConstrName
@@ -66,14 +69,15 @@ def construct_vardict(model,edges):
                 es.append(edges[int(name[6:])])
         # If the value is fractional, add it to the positive variables
         if var.x > 0:
-            pos_vardict[var.VarName] = {'r':r, 'edges':es, 'value':var.x}
+            pos_vardict[var.VarName] = {'r': r, 'edges': es, 'value': var.x}
         # Add the variable with its value, the round and the matching it represents to the vardict.
-        vardict[var.VarName] = {'r':r, 'edges':es, 'value':var.x}
+        vardict[var.VarName] = {'r': r, 'edges': es, 'value': var.x}
     # If there are fractional variables, return it. Otherwise return only vardict.
     if pos_vardict:
         return pos_vardict, vardict
     else:
         return False, vardict
+
 
 # Define the alpha-beta-gamma dictionaries
 def a_b_g(vardict):
@@ -87,38 +91,36 @@ def a_b_g(vardict):
         # for every match in the matching
         for i in range(len(mat)):
             # Add the value of the variable y_M,r to alpha[m,r]
-            if (mat[i],var['r']) not in alpha:
-                alpha[(mat[i],var['r'])] = var['value']
+            if (mat[i], var['r']) not in alpha:
+                alpha[(mat[i], var['r'])] = var['value']
             else:
-                alpha[(mat[i],var['r'])] += var['value']
+                alpha[(mat[i], var['r'])] += var['value']
             # for every combination of matches in the matching
-            for j in range(i+1,len(mat)):
+            for j in range(i + 1, len(mat)):
                 # Add the value of the variable y_M,r to beta[m,m']
-                if (mat[i],mat[j]) not in beta:
-                    beta[(mat[i],mat[j])] = var['value']
+                if (mat[i], mat[j]) not in beta:
+                    beta[(mat[i], mat[j])] = var['value']
                 else:
-                    beta[(mat[i],mat[j])] += var['value']
+                    beta[(mat[i], mat[j])] += var['value']
                 # Add the value of the variable y_M,r to gamma[m,m',r]
-                if (mat[i],mat[j],var['r']) not in gamma:
-                    gamma[(mat[i],mat[j],var['r'])] = var['value']
+                if (mat[i], mat[j], var['r']) not in gamma:
+                    gamma[(mat[i], mat[j], var['r'])] = var['value']
                 else:
-                    gamma[(mat[i],mat[j],var['r'])] += var['value']
+                    gamma[(mat[i], mat[j], var['r'])] += var['value']
     return alpha, beta, gamma
 
+
 # Find all violated inequalities using the alpha-beta-gamma dictionaries.
-def find_violation(n, alpha,beta,gamma):
+def find_violation(n, alpha, beta, gamma):
     violated = []
-    for (m1,m2) in beta:
-        for r in range(n-1):
-            if alpha.get((m1,r),0) + alpha.get((m2,r),0) + beta[(m1,m2)] - 2*gamma.get((m1,m2,r),0) > 1.001:
-                violated.append((m1,m2,r))
+    for (m1, m2) in beta:
+        for r in range(n - 1):
+            if alpha.get((m1, r), 0) + alpha.get((m2, r), 0) + beta[(m1, m2)] - 2 * gamma.get((m1, m2, r), 0) > 1.001:
+                violated.append((m1, m2, r))
     return violated
 
 
 def solve_dual2(model, n, edges, costdict, violated):
-    print('SOLVING DUAL')
-    # Store the maximum for every round in a dicht
-    maxr = dict()
     # Initialise totalsum
     totalsum = 1
 
@@ -166,7 +168,7 @@ def solve_dual2(model, n, edges, costdict, violated):
                 nam = '_var' + str(len(model.getVars())) + '_'
 
                 # Make a new variable corresponding to the matching and round
-                m = model.addVar(vtype="CONTINUOUS", lb=0, ub=1, name=nam)
+                model.addVar(vtype="CONTINUOUS", lb=0, ub=1, name=nam)
                 model.update()
                 print(nam)
 
@@ -219,16 +221,16 @@ def solve_mod_cg(model, n, edges, vardict, costdict):
     objs = [model.getObjective().getValue()]
 
     # While there are violated inequalities
-    while (violated):
+    while violated:
         # Add every violated inequality to the model and solve it again
         for (mm1, mm2, r1) in violated:
             rsm = list(range(n - 1))
             rsm.remove(r1)
             model.addConstr(((quicksum(model.getVarByName(var) for var in vardict if (
-                        mm1 not in vardict[var]['edges'] and mm2 not in vardict[var]['edges'] and r1 == vardict[var][
-                    'r'])) - quicksum(model.getVarByName(var) for var in vardict if (
-                        mm1 in vardict[var]['edges'] and mm2 in vardict[var]['edges'] and vardict[var][
-                    'r'] in rsm))) >= 0), 'cut' + str(nrof_cuts))
+                    mm1 not in vardict[var]['edges'] and mm2 not in vardict[var]['edges'] and r1 == vardict[var]['r']))
+                              - quicksum(model.getVarByName(var) for var in vardict if (
+                                mm1 in vardict[var]['edges'] and mm2 in vardict[var]['edges']
+                                and vardict[var]['r'] in rsm))) >= 0), 'cut' + str(nrof_cuts))
             nrof_cuts += 1
         model.update()
         model.optimize()
@@ -247,11 +249,12 @@ def solve_mod_cg(model, n, edges, vardict, costdict):
         all_violated.extend(violated)
         it += 1
 
-    # If there are no more violated inequalities, return the number of iterations, or 0 if the solution is still fractional.
+    # If there are no more violated inequalities return the number of iterations, or 0 if the solution is fractional.
     for var in model.getVars():
-        if var.x > 0.001 and var.x < 0.999:
+        if 0.001 < var.x < 0.999:
             return 0, objs
     return it, objs
+
 
 def solve_instances():
     # list with models that have an initially fractional solution
@@ -265,7 +268,7 @@ def solve_instances():
 
     # Iterate over all possible test cases
     # for s in ['06', '12', '18']:
-    for s in ['06', '12']:
+    for s in ['06']:
         for p in range(5, 10):
             for k in range(50):
                 print("DIT IS K,S,P", k, s, p)
@@ -273,8 +276,7 @@ def solve_instances():
                     file = 'bin0' + s + '_0' + str(p) + '0_00' + str(k) + '.srr.lp'
                 else:
                     file = 'bin0' + s + '_0' + str(p) + '0_0' + str(k) + '.srr.lp'
-                model = Model('RRT')
-                model = read('results_rootrelaxation/'+file)
+                model = read('results_rootrelaxation/' + file)
                 model.Params.LogToConsole = 0
                 for var in model.getVars():
                     if 'var' not in var.VarName:
@@ -301,10 +303,4 @@ def solve_instances():
                         nrof_viol[(s, p, k)] = {'nrof_viol': len(violated), 'nrof_iter': nrof_iter, 'objectives': objs}
                     else:
                         no_found.append((s, p, k))
-    print(len(number_viol))
-    print(len(int_sol))
-    print(no_found)
-    print(nrof_viol)
-
-
-
+    return len(number_viol), len(int_sol), no_found, nrof_viol
