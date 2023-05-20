@@ -126,7 +126,10 @@ def solve_dual(model, n, edges, costdict, violated):
         dual_pair = dict()
         model.update()
         model.optimize()
-        print(model.Pi)
+        for var in model.getVars():
+            if var.x > 0.01:
+                print(var)
+        print('Duals:', model.Pi)
         # dual vars for rounds constraints
         dual_r = model.Pi[:n - 1]
         # dual vars for match constraints
@@ -137,14 +140,15 @@ def solve_dual(model, n, edges, costdict, violated):
         for r in range(n-1):
             for k in range(len(violated)):
                 if violated[k][2] != r:
-                    dual_edge[(edges.index(violated[k][0]),r)] = dual_edge.get((edges.index(violated[k][0]), r), 0) + dual_c[k]
+                    dual_edge[(edges.index(violated[k][0]), r)] = dual_edge.get((edges.index(violated[k][0]), r), 0) + dual_c[k]
                     dual_pair[(edges.index(violated[k][0]), edges.index(violated[k][1]), r)] = \
                         dual_pair.get((edges.index(violated[k][0]), edges.index(violated[k][1]), r), 0) - dual_c[k]
                 else:
                     dual_pair[(edges.index(violated[k][0]), edges.index(violated[k][1]), r)] = \
                         dual_pair.get((edges.index(violated[k][0]), edges.index(violated[k][1]), r), 0) + dual_c[k]
             for e in range(len(edges)):
-                dual_edge[(e, r)] = dual_edge.get((e, r), 0) + dual_m[e] + costdict.get((edges[e][0], edges[e][1], r), 0)
+                dual_edge[(e, r)] = dual_edge.get((e, r), 0) + dual_m[e] - costdict.get((edges[e][0], edges[e][1], r), 0)
+        print(dual_edge, dual_pair)
 
         for r in range(n - 1):
             print('Trying round', r)
@@ -176,8 +180,7 @@ def solve_dual(model, n, edges, costdict, violated):
                 for var in maxdual.getVars():
                     if var.x > 0.5:
                         print(var)
-                        if 'x[' in var.VarName:
-                            es.append(edges[int(var.varName[2:-1])])
+                        es.append(edges[int(var.varName[2:-1])])
 
                 matchcost = 0
 
@@ -203,96 +206,8 @@ def solve_dual(model, n, edges, costdict, violated):
                 model.getVars()[-1].Obj = matchcost
                 model.update()
                 model.optimize()
-                break
-    return model
-
-
-def solve_dual2(model, n, edges, costdict, violated):
-    # Initialise totalsum
-    totalsum = 1
-
-    while totalsum > 0.01:
-        model.optimize()
-        print(model.Pi)
-        # dual vars for rounds constraints
-        dual_r = model.Pi[:n - 1]
-        # dual vars for match constraints
-        dual_m = model.Pi[n - 1:n + int((n - 1) * n / 2) - 1]
-        # dual vars for the cut constraints
-        dual_c = model.Pi[n + int((n - 1) * n / 2) - 1:]
-        for r in range(n - 1):
-            print('Trying round', r)
-            maxdual = Model("dual")
-            maxdual.ModelSense = GRB.MAXIMIZE
-            maxdual.Params.LogToConsole = 0
-            x = maxdual.addVars(edges, vtype=GRB.BINARY, name='x')
-            x_p = maxdual.addVars(range(len(violated)), vtype=GRB.INTEGER, name='x_p')
-            x_n = maxdual.addVars(range(len(violated)), vtype=GRB.INTEGER, name='x_n')
-
-            maxdual.setObjective(dual_r[r] + quicksum(
-                (dual_m[edges.index(e)] - costdict.get((e[0], e[1], r), 0)) * x[e] for e in edges) + quicksum(
-                dual_c[i] * x_p[i] for i in range(len(violated)) if r == violated[i][2]) - quicksum(
-                dual_c[i] * x_n[i] for i in range(len(violated)) if r != violated[i][2]))
-            maxdual.addConstrs(((quicksum(x[e] for e in edges if v in e) == 1) for v in range(n)), 'matching')
-            maxdual.addConstrs(
-                ((x_p[i] <= (2 - x[violated[i][0]] - x[violated[i][1]]) / 2) for i in range(len(violated))), 'pUB')
-            maxdual.addConstrs(
-                ((x_p[i] + 1 >= (2 - x[violated[i][0]] - x[violated[i][1]]) / 2 + 0.001) for i in range(len(violated))),
-                'pLB')
-            maxdual.addConstrs(((x_n[i] <= (x[violated[i][0]] + x[violated[i][1]]) / 2) for i in range(len(violated))),
-                               'nUB')
-            maxdual.addConstrs(
-                ((x_n[i] + 1 >= (x[violated[i][0]] + x[violated[i][1]]) / 2 + 0.001) for i in range(len(violated))),
-                'nLB')
-
-            maxdual.update()
-            maxdual.optimize()
-
-            totalsum = maxdual.objVal
-            print(totalsum)
-
-            if totalsum > 0.01:
-                #                 if len(model.getVars()) > 75:
-                #                     return False
-                nam = '_var' + str(len(model.getVars())) + '_'
-
-                # Make a new variable corresponding to the matching and round
-                model.addVar(vtype="CONTINUOUS", lb=0, ub=1, name=nam)
-                model.update()
-                print(nam)
-
-                es = []
-                for var in maxdual.getVars():
-                    if var.x > 0.5:
-                        print(var)
-                        if 'x[' in var.VarName:
-                            es.append((int(var.varName[2:var.VarName.index(',')]),
-                                       int(var.Varname[var.VarName.index(',') + 1:-1])))
-
-                matchcost = 0
-
-                # Update the constraints and objective value
-                con = model.getConstrs()
-                print(r, con[r])
-                model.chgCoeff(con[r], model.getVars()[-1], 1)
-                for edge in es:
-                    matchcost += costdict.get((edge[0], edge[1], r), 0)
-                    index = edges.index(edge) + n - 1
-                    print(edge, con[index])
-                    model.chgCoeff(con[index], model.getVars()[-1], 1)
-                for k in range(len(violated)):
-                    index = n + int((n - 1) * n / 2) + k - 1
-                    (m3, m4, r1) = violated[k]
-                    print(m3, m4, r1, con[index])
-                    if len(set(es).intersection({m3, m4})) == 2 and r1 != r:
-                        print("negative", model.getVars()[-1])
-                        model.chgCoeff(con[index], model.getVars()[-1], -1)
-                    elif len(set(es).intersection({m3, m4})) == 0 and r1 == r:
-                        print("positive", model.getVarByName(nam))
-                        model.chgCoeff(con[index], model.getVarByName(nam), 1)
-                model.getVars()[-1].Obj = matchcost
-                model.update()
-                model.optimize()
+                model.write('foo.lp')
+                totalsum = 0
                 break
     return model
 
@@ -358,8 +273,8 @@ def solve_instances():
     # Iterate over all possible test cases
     # for s in ['06', '12', '18']:
     for s in ['06']:
-        for p in range(5, 10):
-            for k in range(50):
+        for p in range(5,6):
+            for k in range(1):
                 print("DIT IS K,S,P", k, s, p)
                 if k < 10:
                     file = 'bin0' + s + '_0' + str(p) + '0_00' + str(k) + '.srr.lp'
