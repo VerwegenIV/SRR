@@ -1,0 +1,15 @@
+solution status: optimal solution found
+objective value:                                 4.75
+_var4_                                           0.75 	(obj:1)
+_var13_                                           0.5 	(obj:1)
+_var17_                                          0.25 	(obj:0)
+_var22_                                          0.25 	(obj:0)
+_var29_                                          0.25 	(obj:1)
+_var31_                                          0.25 	(obj:2)
+_var36_                                           0.5 	(obj:2)
+_var40_                                          0.25 	(obj:1)
+_var52_                                           0.5 	(obj:0)
+_var54_                                           0.5 	(obj:1)
+_var55_                                          0.25 	(obj:1)
+_var56_                                           0.5 	(obj:1)
+_var57_                                          0.25 	(obj:1)

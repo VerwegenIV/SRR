@@ -1,0 +1,85 @@
+STATISTICS
+  Problem name     : t_instances/bin006_050_021.srr
+  Variables        : 56 (0 binary, 0 integer, 0 implicit integer, 56 continuous)
+  Constraints      : 20 initial, 20 maximal
+OBJECTIVE
+  Sense            : minimize
+VARIABLES
+  [continuous] <_var0_>: obj=2, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var1_>: obj=2, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var2_>: obj=2, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var3_>: obj=2, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var4_>: obj=2, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var5_>: obj=2, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var6_>: obj=3, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var7_>: obj=1, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var8_>: obj=3, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var9_>: obj=2, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var10_>: obj=2, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var11_>: obj=1, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var12_>: obj=1, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var13_>: obj=1, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var14_>: obj=2, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var15_>: obj=2, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var16_>: obj=1, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var17_>: obj=1, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var18_>: obj=0, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var19_>: obj=1, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var20_>: obj=3, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var21_>: obj=1, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var22_>: obj=2, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var23_>: obj=2, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var24_>: obj=2, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var25_>: obj=0, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var26_>: obj=2, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var27_>: obj=2, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var28_>: obj=1, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var29_>: obj=2, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var30_>: obj=0, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var31_>: obj=1, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var32_>: obj=0, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var33_>: obj=0, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var34_>: obj=2, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var35_>: obj=1, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var36_>: obj=2, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var37_>: obj=3, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var38_>: obj=1, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var39_>: obj=3, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var40_>: obj=2, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var41_>: obj=1, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var42_>: obj=2, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var43_>: obj=0, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var44_>: obj=1, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var45_>: obj=3, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var46_>: obj=2, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var47_>: obj=2, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var48_>: obj=1, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var49_>: obj=1, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var50_>: obj=0, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var51_>: obj=0, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var52_>: obj=2, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var53_>: obj=1, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var54_>: obj=0, global bounds=[0,1], local bounds=[0,1]
+  [continuous] <_var55_>: obj=1, global bounds=[0,1], local bounds=[0,1]
+CONSTRAINTS
+  [linear] <round[0]>: <_var0_>[C] +<_var3_>[C] +<_var6_>[C] +<_var9_>[C] +<_var14_>[C] +<_var19_>[C] +<_var24_>[C] +<_var29_>[C] +<_var34_>[C] +<_var39_>[C] +<_var44_>[C] +<_var51_>[C] == 1;
+  [linear] <round[1]>: <_var1_>[C] +<_var4_>[C] +<_var7_>[C] +<_var10_>[C] +<_var15_>[C] +<_var20_>[C] +<_var25_>[C] +<_var30_>[C] +<_var35_>[C] +<_var40_>[C] +<_var45_>[C] +<_var55_>[C] == 1;
+  [linear] <round[2]>: <_var2_>[C] +<_var5_>[C] +<_var8_>[C] +<_var11_>[C] +<_var16_>[C] +<_var21_>[C] +<_var26_>[C] +<_var31_>[C] +<_var36_>[C] +<_var41_>[C] +<_var46_>[C] +<_var52_>[C] == 1;
+  [linear] <round[3]>: <_var12_>[C] +<_var17_>[C] +<_var22_>[C] +<_var27_>[C] +<_var32_>[C] +<_var37_>[C] +<_var42_>[C] +<_var47_>[C] +<_var49_>[C] +<_var53_>[C] == 1;
+  [linear] <round[4]>: <_var13_>[C] +<_var18_>[C] +<_var23_>[C] +<_var28_>[C] +<_var33_>[C] +<_var38_>[C] +<_var43_>[C] +<_var48_>[C] +<_var50_>[C] +<_var54_>[C] == 1;
+  [linear] <match[0:0,1]>: <_var0_>[C] +<_var1_>[C] +<_var2_>[C] +<_var6_>[C] +<_var7_>[C] +<_var8_>[C] +<_var24_>[C] +<_var25_>[C] +<_var26_>[C] +<_var27_>[C] +<_var28_>[C] +<_var49_>[C] +<_var53_>[C] == 1;
+  [linear] <match[1:0,2]>: <_var3_>[C] +<_var4_>[C] +<_var5_>[C] +<_var34_>[C] +<_var35_>[C] +<_var36_>[C] +<_var37_>[C] +<_var38_>[C] +<_var50_>[C] +<_var55_>[C] == 1;
+  [linear] <match[2:0,3]>: <_var14_>[C] +<_var15_>[C] +<_var16_>[C] +<_var17_>[C] +<_var18_>[C] +<_var39_>[C] +<_var40_>[C] +<_var41_>[C] +<_var42_>[C] +<_var43_>[C] +<_var52_>[C] +<_var54_>[C] == 1;
+  [linear] <match[3:0,4]>: <_var9_>[C] +<_var10_>[C] +<_var11_>[C] +<_var12_>[C] +<_var13_>[C] +<_var29_>[C] +<_var30_>[C] +<_var31_>[C] +<_var32_>[C] +<_var33_>[C] == 1;
+  [linear] <match[4:0,5]>: <_var19_>[C] +<_var20_>[C] +<_var21_>[C] +<_var22_>[C] +<_var23_>[C] +<_var44_>[C] +<_var45_>[C] +<_var46_>[C] +<_var47_>[C] +<_var48_>[C] +<_var51_>[C] == 1;
+  [linear] <match[5:1,2]>: <_var14_>[C] +<_var15_>[C] +<_var16_>[C] +<_var17_>[C] +<_var18_>[C] +<_var29_>[C] +<_var30_>[C] +<_var31_>[C] +<_var32_>[C] +<_var33_>[C] +<_var51_>[C] == 1;
+  [linear] <match[6:1,3]>: <_var3_>[C] +<_var4_>[C] +<_var5_>[C] +<_var44_>[C] +<_var45_>[C] +<_var46_>[C] +<_var47_>[C] +<_var48_>[C] +<_var50_>[C] == 1;
+  [linear] <match[7:1,4]>: <_var19_>[C] +<_var20_>[C] +<_var21_>[C] +<_var22_>[C] +<_var23_>[C] +<_var39_>[C] +<_var40_>[C] +<_var41_>[C] +<_var42_>[C] +<_var43_>[C] +<_var55_>[C] == 1;
+  [linear] <match[8:1,5]>: <_var9_>[C] +<_var10_>[C] +<_var11_>[C] +<_var12_>[C] +<_var13_>[C] +<_var34_>[C] +<_var35_>[C] +<_var36_>[C] +<_var37_>[C] +<_var38_>[C] +<_var52_>[C] +<_var54_>[C] == 1;
+  [linear] <match[9:2,3]>: <_var0_>[C] +<_var1_>[C] +<_var2_>[C] +<_var9_>[C] +<_var10_>[C] +<_var11_>[C] +<_var12_>[C] +<_var13_>[C] +<_var19_>[C] +<_var20_>[C] +<_var21_>[C] +<_var22_>[C] +<_var23_>[C] +<_var49_>[C] == 1;
+  [linear] <match[10:2,4]>: <_var6_>[C] +<_var7_>[C] +<_var8_>[C] +<_var44_>[C] +<_var45_>[C] +<_var46_>[C] +<_var47_>[C] +<_var48_>[C] +<_var52_>[C] +<_var53_>[C] +<_var54_>[C] == 1;
+  [linear] <match[11:2,5]>: <_var24_>[C] +<_var25_>[C] +<_var26_>[C] +<_var27_>[C] +<_var28_>[C] +<_var39_>[C] +<_var40_>[C] +<_var41_>[C] +<_var42_>[C] +<_var43_>[C] == 1;
+  [linear] <match[12:3,4]>: <_var24_>[C] +<_var25_>[C] +<_var26_>[C] +<_var27_>[C] +<_var28_>[C] +<_var34_>[C] +<_var35_>[C] +<_var36_>[C] +<_var37_>[C] +<_var38_>[C] +<_var51_>[C] == 1;
+  [linear] <match[13:3,5]>: <_var6_>[C] +<_var7_>[C] +<_var8_>[C] +<_var29_>[C] +<_var30_>[C] +<_var31_>[C] +<_var32_>[C] +<_var33_>[C] +<_var53_>[C] +<_var55_>[C] == 1;
+  [linear] <match[14:4,5]>: <_var0_>[C] +<_var1_>[C] +<_var2_>[C] +<_var3_>[C] +<_var4_>[C] +<_var5_>[C] +<_var14_>[C] +<_var15_>[C] +<_var16_>[C] +<_var17_>[C] +<_var18_>[C] +<_var49_>[C] +<_var50_>[C] == 1;
+END

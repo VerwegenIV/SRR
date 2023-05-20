@@ -1,0 +1,273 @@
+SCIP version 8.0.3.5 [precision: 8 byte] [memory: block] [mode: optimized] [LP solver: Soplex 6.0.1.3] [GitHash: 438792519e]
+Copyright (c) 2002-2023 Zuse Institute Berlin (ZIB)
+
+External libraries: 
+  Readline 8.1         GNU library for command line editing (gnu.org/s/readline)
+  Soplex 6.0.1.3       Linear Programming Solver developed at Zuse Institute Berlin (soplex.zib.de) [GitHash: 713be0fe]
+  CppAD 20180000.0     Algorithmic Differentiation of C++ algorithms developed by B. Bell (github.com/coin-or/CppAD)
+  ZLIB 1.2.11          General purpose compression library by J. Gailly and M. Adler (zlib.net)
+  bliss 0.77           Computing Graph Automorphism Groups by T. Junttila and P. Kaski (www.tcs.hut.fi/Software/bliss/)
+
+user parameter file <scip.set> not found - using default parameters
+
+srr/relaxation = TRUE
+
+read problem <instances/bin018_090_027.srr>
+============
+
+Original problem: 
+original problem has 0 variables (0 bin, 0 int, 0 impl, 0 cont) and 170 constraints
+
+presolving:
+presolving (1 rounds: 1 fast, 1 medium, 1 exhaustive):
+ 0 deleted vars, 0 deleted constraints, 0 added constraints, 0 tightened bounds, 0 added holes, 0 changed sides, 0 changed coefficients
+ 0 implications, 0 cliques
+presolved problem has 0 variables (0 bin, 0 int, 0 impl, 0 cont) and 170 constraints
+    170 constraints of type <linear>
+Presolving Time: 0.00
+
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  0.0s|     1 |     0 |     1 |     - |   922k |   0 |   1 | 170 | 170 |   0 |  0 |   0 |   0 |      --      |      --      |    Inf | unknown
+  0.2s|     1 |     0 |  1225 |     - |  7264k |   0 |1615 | 170 | 170 |   0 |  0 |   0 |   0 |      --      |      --      |    Inf | unknown
+r 1.0s|     1 |     0 |  9052 |     - |simplero|   0 |2771 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 1.078515e+02 |    Inf | unknown
+r 1.0s|     1 |     0 |  9161 |     - |simplero|   0 |2788 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 1.059355e+02 |    Inf | unknown
+r 1.1s|     1 |     0 |  9310 |     - |simplero|   0 |2805 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 1.041432e+02 |    Inf | unknown
+r 1.1s|     1 |     0 |  9433 |     - |simplero|   0 |2822 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 1.032134e+02 |    Inf | unknown
+r 1.1s|     1 |     0 |  9674 |     - |simplero|   0 |2839 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 1.004675e+02 |    Inf | unknown
+r 1.2s|     1 |     0 |  9926 |     - |simplero|   0 |2856 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 9.561303e+01 |    Inf | unknown
+r 1.2s|     1 |     0 | 10145 |     - |simplero|   0 |2873 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 9.223057e+01 |    Inf | unknown
+r 1.2s|     1 |     0 | 10346 |     - |simplero|   0 |2890 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 9.026883e+01 |    Inf | unknown
+r 1.2s|     1 |     0 | 10460 |     - |simplero|   0 |2907 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 8.856979e+01 |    Inf | unknown
+r 1.2s|     1 |     0 | 10534 |     - |simplero|   0 |2907 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 8.802142e+01 |    Inf | unknown
+r 1.3s|     1 |     0 | 10553 |     - |simplero|   0 |2907 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 8.799886e+01 |    Inf | unknown
+r 1.3s|     1 |     0 | 10556 |     - |simplero|   0 |2907 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 8.799822e+01 |    Inf | unknown
+r 1.3s|     1 |     0 | 10711 |     - |simplero|   0 |2924 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 8.557995e+01 |    Inf | unknown
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+r 1.3s|     1 |     0 | 10770 |     - |simplero|   0 |2924 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 8.536029e+01 |    Inf | unknown
+r 1.3s|     1 |     0 | 10784 |     - |simplero|   0 |2924 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 8.535095e+01 |    Inf | unknown
+r 1.3s|     1 |     0 | 10936 |     - |simplero|   0 |2941 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 8.276236e+01 |    Inf | unknown
+r 1.3s|     1 |     0 | 11008 |     - |simplero|   0 |2941 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 8.247849e+01 |    Inf | unknown
+r 1.3s|     1 |     0 | 11039 |     - |simplero|   0 |2941 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 8.243534e+01 |    Inf | unknown
+r 1.3s|     1 |     0 | 11179 |     - |simplero|   0 |2958 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 8.130201e+01 |    Inf | unknown
+r 1.3s|     1 |     0 | 11227 |     - |simplero|   0 |2958 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 8.122482e+01 |    Inf | unknown
+r 1.3s|     1 |     0 | 11251 |     - |simplero|   0 |2958 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 8.118695e+01 |    Inf | unknown
+r 1.4s|     1 |     0 | 11258 |     - |simplero|   0 |2958 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 8.118631e+01 |    Inf | unknown
+r 1.4s|     1 |     0 | 11415 |     - |simplero|   0 |2975 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 7.943368e+01 |    Inf | unknown
+r 1.4s|     1 |     0 | 11511 |     - |simplero|   0 |2975 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 7.878962e+01 |    Inf | unknown
+r 1.4s|     1 |     0 | 11539 |     - |simplero|   0 |2975 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 7.874502e+01 |    Inf | unknown
+r 1.4s|     1 |     0 | 11681 |     - |simplero|   0 |2992 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 7.729857e+01 |    Inf | unknown
+r 1.4s|     1 |     0 | 11727 |     - |simplero|   0 |2992 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 7.717575e+01 |    Inf | unknown
+r 1.4s|     1 |     0 | 11757 |     - |simplero|   0 |2992 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 7.704973e+01 |    Inf | unknown
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+r 1.4s|     1 |     0 | 11762 |     - |simplero|   0 |2992 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 7.704898e+01 |    Inf | unknown
+r 1.4s|     1 |     0 | 11900 |     - |simplero|   0 |3009 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 7.610137e+01 |    Inf | unknown
+  1.4s|     1 |     0 | 11933 |     - |    14M |   0 |3009 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 7.610137e+01 |    Inf | unknown
+r 1.4s|     1 |     0 | 11933 |     - |simplero|   0 |3009 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 7.605280e+01 |    Inf | unknown
+r 1.4s|     1 |     0 | 11944 |     - |simplero|   0 |3009 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 7.604961e+01 |    Inf | unknown
+r 1.5s|     1 |     0 | 11949 |     - |simplero|   0 |3009 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 7.604931e+01 |    Inf | unknown
+r 1.5s|     1 |     0 | 12079 |     - |simplero|   0 |3026 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 7.527155e+01 |    Inf | unknown
+r 1.5s|     1 |     0 | 12187 |     - |simplero|   0 |3026 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 7.484137e+01 |    Inf | unknown
+r 1.5s|     1 |     0 | 12220 |     - |simplero|   0 |3026 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 7.482067e+01 |    Inf | unknown
+r 1.5s|     1 |     0 | 12363 |     - |simplero|   0 |3043 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 7.406018e+01 |    Inf | unknown
+r 1.5s|     1 |     0 | 12433 |     - |simplero|   0 |3043 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 7.382959e+01 |    Inf | unknown
+r 1.5s|     1 |     0 | 12544 |     - |simplero|   0 |3060 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 7.288304e+01 |    Inf | unknown
+r 1.5s|     1 |     0 | 12585 |     - |simplero|   0 |3060 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 7.281820e+01 |    Inf | unknown
+r 1.5s|     1 |     0 | 12593 |     - |simplero|   0 |3060 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 7.280925e+01 |    Inf | unknown
+r 1.5s|     1 |     0 | 12599 |     - |simplero|   0 |3060 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 7.280780e+01 |    Inf | unknown
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+r 1.6s|     1 |     0 | 12750 |     - |simplero|   0 |3077 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 7.168890e+01 |    Inf | unknown
+r 1.6s|     1 |     0 | 12776 |     - |simplero|   0 |3077 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 7.164227e+01 |    Inf | unknown
+r 1.6s|     1 |     0 | 12782 |     - |simplero|   0 |3077 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 7.164085e+01 |    Inf | unknown
+r 1.6s|     1 |     0 | 12784 |     - |simplero|   0 |3077 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 7.164056e+01 |    Inf | unknown
+r 1.6s|     1 |     0 | 12907 |     - |simplero|   0 |3094 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 7.076632e+01 |    Inf | unknown
+r 1.6s|     1 |     0 | 12963 |     - |simplero|   0 |3094 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 7.065936e+01 |    Inf | unknown
+r 1.6s|     1 |     0 | 12994 |     - |simplero|   0 |3094 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 7.064033e+01 |    Inf | unknown
+r 1.6s|     1 |     0 | 13156 |     - |simplero|   0 |3111 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.948179e+01 |    Inf | unknown
+r 1.6s|     1 |     0 | 13167 |     - |simplero|   0 |3111 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.947243e+01 |    Inf | unknown
+r 1.6s|     1 |     0 | 13177 |     - |simplero|   0 |3111 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.947164e+01 |    Inf | unknown
+r 1.6s|     1 |     0 | 13179 |     - |simplero|   0 |3111 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.947155e+01 |    Inf | unknown
+r 1.6s|     1 |     0 | 13353 |     - |simplero|   0 |3128 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.843040e+01 |    Inf | unknown
+r 1.7s|     1 |     0 | 13379 |     - |simplero|   0 |3128 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.836649e+01 |    Inf | unknown
+r 1.7s|     1 |     0 | 13486 |     - |simplero|   0 |3145 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.755951e+01 |    Inf | unknown
+r 1.7s|     1 |     0 | 13525 |     - |simplero|   0 |3145 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.748067e+01 |    Inf | unknown
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+r 1.7s|     1 |     0 | 13535 |     - |simplero|   0 |3145 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.747669e+01 |    Inf | unknown
+r 1.7s|     1 |     0 | 13656 |     - |simplero|   0 |3162 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.679742e+01 |    Inf | unknown
+r 1.7s|     1 |     0 | 13730 |     - |simplero|   0 |3162 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.643006e+01 |    Inf | unknown
+r 1.7s|     1 |     0 | 13740 |     - |simplero|   0 |3162 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.642746e+01 |    Inf | unknown
+r 1.7s|     1 |     0 | 13852 |     - |simplero|   0 |3179 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.551530e+01 |    Inf | unknown
+r 1.7s|     1 |     0 | 13872 |     - |simplero|   0 |3179 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.549768e+01 |    Inf | unknown
+r 1.7s|     1 |     0 | 13883 |     - |simplero|   0 |3179 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.549359e+01 |    Inf | unknown
+r 1.7s|     1 |     0 | 13888 |     - |simplero|   0 |3179 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.549335e+01 |    Inf | unknown
+r 1.7s|     1 |     0 | 13995 |     - |simplero|   0 |3196 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.482755e+01 |    Inf | unknown
+r 1.8s|     1 |     0 | 14031 |     - |simplero|   0 |3196 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.475472e+01 |    Inf | unknown
+r 1.8s|     1 |     0 | 14044 |     - |simplero|   0 |3196 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.475136e+01 |    Inf | unknown
+r 1.8s|     1 |     0 | 14171 |     - |simplero|   0 |3213 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.377765e+01 |    Inf | unknown
+r 1.8s|     1 |     0 | 14257 |     - |simplero|   0 |3213 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.347529e+01 |    Inf | unknown
+r 1.8s|     1 |     0 | 14279 |     - |simplero|   0 |3213 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.345809e+01 |    Inf | unknown
+r 1.8s|     1 |     0 | 14283 |     - |simplero|   0 |3213 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.345701e+01 |    Inf | unknown
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+r 1.8s|     1 |     0 | 14413 |     - |simplero|   0 |3230 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.252300e+01 |    Inf | unknown
+r 1.8s|     1 |     0 | 14437 |     - |simplero|   0 |3230 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.247997e+01 |    Inf | unknown
+r 1.8s|     1 |     0 | 14442 |     - |simplero|   0 |3230 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.247607e+01 |    Inf | unknown
+r 1.8s|     1 |     0 | 14560 |     - |simplero|   0 |3247 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.183881e+01 |    Inf | unknown
+r 1.8s|     1 |     0 | 14606 |     - |simplero|   0 |3247 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.179155e+01 |    Inf | unknown
+r 1.8s|     1 |     0 | 14619 |     - |simplero|   0 |3247 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.178332e+01 |    Inf | unknown
+r 1.8s|     1 |     0 | 14623 |     - |simplero|   0 |3247 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.178325e+01 |    Inf | unknown
+r 1.9s|     1 |     0 | 14787 |     - |simplero|   0 |3264 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.095016e+01 |    Inf | unknown
+r 1.9s|     1 |     0 | 14804 |     - |simplero|   0 |3264 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.092185e+01 |    Inf | unknown
+r 1.9s|     1 |     0 | 14814 |     - |simplero|   0 |3264 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.091302e+01 |    Inf | unknown
+r 1.9s|     1 |     0 | 14982 |     - |simplero|   0 |3281 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.006910e+01 |    Inf | unknown
+r 1.9s|     1 |     0 | 15008 |     - |simplero|   0 |3281 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.002037e+01 |    Inf | unknown
+r 1.9s|     1 |     0 | 15011 |     - |simplero|   0 |3281 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 6.002013e+01 |    Inf | unknown
+r 1.9s|     1 |     0 | 15154 |     - |simplero|   0 |3298 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.930803e+01 |    Inf | unknown
+r 1.9s|     1 |     0 | 15173 |     - |simplero|   0 |3298 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.928468e+01 |    Inf | unknown
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+r 1.9s|     1 |     0 | 15184 |     - |simplero|   0 |3298 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.927996e+01 |    Inf | unknown
+r 1.9s|     1 |     0 | 15186 |     - |simplero|   0 |3298 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.927934e+01 |    Inf | unknown
+r 1.9s|     1 |     0 | 15307 |     - |simplero|   0 |3315 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.853869e+01 |    Inf | unknown
+r 2.0s|     1 |     0 | 15340 |     - |simplero|   0 |3315 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.844329e+01 |    Inf | unknown
+r 2.0s|     1 |     0 | 15344 |     - |simplero|   0 |3315 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.844285e+01 |    Inf | unknown
+r 2.0s|     1 |     0 | 15443 |     - |simplero|   0 |3332 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.786484e+01 |    Inf | unknown
+r 2.0s|     1 |     0 | 15465 |     - |simplero|   0 |3332 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.783832e+01 |    Inf | unknown
+r 2.0s|     1 |     0 | 15485 |     - |simplero|   0 |3332 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.782805e+01 |    Inf | unknown
+r 2.0s|     1 |     0 | 15613 |     - |simplero|   0 |3349 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.726374e+01 |    Inf | unknown
+r 2.0s|     1 |     0 | 15640 |     - |simplero|   0 |3349 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.723851e+01 |    Inf | unknown
+r 2.0s|     1 |     0 | 15651 |     - |simplero|   0 |3349 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.723405e+01 |    Inf | unknown
+r 2.0s|     1 |     0 | 15654 |     - |simplero|   0 |3349 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.723393e+01 |    Inf | unknown
+r 2.0s|     1 |     0 | 15731 |     - |simplero|   0 |3366 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.707891e+01 |    Inf | unknown
+r 2.0s|     1 |     0 | 15778 |     - |simplero|   0 |3366 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.702804e+01 |    Inf | unknown
+r 2.0s|     1 |     0 | 15784 |     - |simplero|   0 |3366 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.702772e+01 |    Inf | unknown
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+r 2.0s|     1 |     0 | 15944 |     - |simplero|   0 |3383 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.643612e+01 |    Inf | unknown
+r 2.0s|     1 |     0 | 15984 |     - |simplero|   0 |3383 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.634067e+01 |    Inf | unknown
+r 2.1s|     1 |     0 | 15999 |     - |simplero|   0 |3383 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.633727e+01 |    Inf | unknown
+r 2.1s|     1 |     0 | 16107 |     - |simplero|   0 |3400 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.575777e+01 |    Inf | unknown
+r 2.1s|     1 |     0 | 16149 |     - |simplero|   0 |3400 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.564130e+01 |    Inf | unknown
+r 2.1s|     1 |     0 | 16161 |     - |simplero|   0 |3400 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.563654e+01 |    Inf | unknown
+r 2.1s|     1 |     0 | 16166 |     - |simplero|   0 |3400 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.563635e+01 |    Inf | unknown
+r 2.1s|     1 |     0 | 16295 |     - |simplero|   0 |3417 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.525825e+01 |    Inf | unknown
+r 2.1s|     1 |     0 | 16382 |     - |simplero|   0 |3434 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.506026e+01 |    Inf | unknown
+r 2.1s|     1 |     0 | 16413 |     - |simplero|   0 |3434 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.501928e+01 |    Inf | unknown
+r 2.1s|     1 |     0 | 16453 |     - |simplero|   0 |3434 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.499150e+01 |    Inf | unknown
+r 2.1s|     1 |     0 | 16554 |     - |simplero|   0 |3451 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.477562e+01 |    Inf | unknown
+r 2.1s|     1 |     0 | 16573 |     - |simplero|   0 |3451 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.475306e+01 |    Inf | unknown
+r 2.1s|     1 |     0 | 16738 |     - |simplero|   0 |3468 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.434832e+01 |    Inf | unknown
+r 2.1s|     1 |     0 | 16796 |     - |simplero|   0 |3468 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.429967e+01 |    Inf | unknown
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+r 2.1s|     1 |     0 | 16810 |     - |simplero|   0 |3468 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.429636e+01 |    Inf | unknown
+r 2.2s|     1 |     0 | 16974 |     - |simplero|   0 |3485 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.397436e+01 |    Inf | unknown
+r 2.2s|     1 |     0 | 16993 |     - |simplero|   0 |3485 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.395270e+01 |    Inf | unknown
+r 2.2s|     1 |     0 | 16998 |     - |simplero|   0 |3485 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.395255e+01 |    Inf | unknown
+r 2.2s|     1 |     0 | 17118 |     - |simplero|   0 |3502 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.365283e+01 |    Inf | unknown
+r 2.2s|     1 |     0 | 17142 |     - |simplero|   0 |3502 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.364458e+01 |    Inf | unknown
+r 2.2s|     1 |     0 | 17162 |     - |simplero|   0 |3502 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.363457e+01 |    Inf | unknown
+r 2.2s|     1 |     0 | 17164 |     - |simplero|   0 |3502 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.363455e+01 |    Inf | unknown
+r 2.2s|     1 |     0 | 17249 |     - |simplero|   0 |3519 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.330864e+01 |    Inf | unknown
+r 2.2s|     1 |     0 | 17279 |     - |simplero|   0 |3519 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.329058e+01 |    Inf | unknown
+r 2.2s|     1 |     0 | 17286 |     - |simplero|   0 |3519 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.329000e+01 |    Inf | unknown
+r 2.2s|     1 |     0 | 17363 |     - |simplero|   0 |3536 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.312534e+01 |    Inf | unknown
+r 2.2s|     1 |     0 | 17427 |     - |simplero|   0 |3536 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.304245e+01 |    Inf | unknown
+  2.2s|     1 |     0 | 17455 |     - |    21M |   0 |3536 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.304245e+01 |    Inf | unknown
+r 2.2s|     1 |     0 | 17455 |     - |simplero|   0 |3536 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.303163e+01 |    Inf | unknown
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+r 2.2s|     1 |     0 | 17467 |     - |simplero|   0 |3536 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.303064e+01 |    Inf | unknown
+r 2.2s|     1 |     0 | 17627 |     - |simplero|   0 |3553 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.269887e+01 |    Inf | unknown
+r 2.3s|     1 |     0 | 17636 |     - |simplero|   0 |3553 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.269773e+01 |    Inf | unknown
+r 2.3s|     1 |     0 | 17744 |     - |simplero|   0 |3570 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.238811e+01 |    Inf | unknown
+r 2.3s|     1 |     0 | 17768 |     - |simplero|   0 |3570 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.237790e+01 |    Inf | unknown
+r 2.3s|     1 |     0 | 17771 |     - |simplero|   0 |3570 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.237788e+01 |    Inf | unknown
+r 2.3s|     1 |     0 | 17894 |     - |simplero|   0 |3587 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.208977e+01 |    Inf | unknown
+r 2.3s|     1 |     0 | 17928 |     - |simplero|   0 |3587 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.207997e+01 |    Inf | unknown
+r 2.3s|     1 |     0 | 17932 |     - |simplero|   0 |3587 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.207995e+01 |    Inf | unknown
+r 2.3s|     1 |     0 | 18006 |     - |simplero|   0 |3604 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.192732e+01 |    Inf | unknown
+r 2.3s|     1 |     0 | 18057 |     - |simplero|   0 |3604 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.189652e+01 |    Inf | unknown
+r 2.3s|     1 |     0 | 18059 |     - |simplero|   0 |3604 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.189611e+01 |    Inf | unknown
+r 2.3s|     1 |     0 | 18190 |     - |simplero|   0 |3621 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.168934e+01 |    Inf | unknown
+r 2.3s|     1 |     0 | 18219 |     - |simplero|   0 |3621 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.167714e+01 |    Inf | unknown
+r 2.3s|     1 |     0 | 18223 |     - |simplero|   0 |3621 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.167707e+01 |    Inf | unknown
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+r 2.3s|     1 |     0 | 18317 |     - |simplero|   0 |3638 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.156319e+01 |    Inf | unknown
+r 2.3s|     1 |     0 | 18351 |     - |simplero|   0 |3638 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.154988e+01 |    Inf | unknown
+r 2.3s|     1 |     0 | 18361 |     - |simplero|   0 |3638 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.154893e+01 |    Inf | unknown
+r 2.4s|     1 |     0 | 18456 |     - |simplero|   0 |3655 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.141019e+01 |    Inf | unknown
+r 2.4s|     1 |     0 | 18472 |     - |simplero|   0 |3655 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.140421e+01 |    Inf | unknown
+r 2.4s|     1 |     0 | 18481 |     - |simplero|   0 |3655 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.140287e+01 |    Inf | unknown
+r 2.4s|     1 |     0 | 18565 |     - |simplero|   0 |3672 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.128453e+01 |    Inf | unknown
+r 2.4s|     1 |     0 | 18619 |     - |simplero|   0 |3672 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.124991e+01 |    Inf | unknown
+r 2.4s|     1 |     0 | 18722 |     - |simplero|   0 |3689 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.115778e+01 |    Inf | unknown
+r 2.4s|     1 |     0 | 18739 |     - |simplero|   0 |3689 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.115411e+01 |    Inf | unknown
+r 2.4s|     1 |     0 | 18745 |     - |simplero|   0 |3689 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.115395e+01 |    Inf | unknown
+r 2.4s|     1 |     0 | 18909 |     - |simplero|   0 |3706 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.100726e+01 |    Inf | unknown
+r 2.4s|     1 |     0 | 18982 |     - |simplero|   0 |3706 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.098682e+01 |    Inf | unknown
+r 2.4s|     1 |     0 | 19003 |     - |simplero|   0 |3706 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.098190e+01 |    Inf | unknown
+r 2.4s|     1 |     0 | 19138 |     - |simplero|   0 |3723 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.077776e+01 |    Inf | unknown
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+r 2.4s|     1 |     0 | 19168 |     - |simplero|   0 |3723 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.076248e+01 |    Inf | unknown
+r 2.4s|     1 |     0 | 19213 |     - |simplero|   0 |3739 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.073570e+01 |    Inf | unknown
+r 2.4s|     1 |     0 | 19234 |     - |simplero|   0 |3739 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.073122e+01 |    Inf | unknown
+r 2.4s|     1 |     0 | 19236 |     - |simplero|   0 |3739 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.073112e+01 |    Inf | unknown
+r 2.4s|     1 |     0 | 19301 |     - |simplero|   0 |3756 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.070236e+01 |    Inf | unknown
+r 2.4s|     1 |     0 | 19333 |     - |simplero|   0 |3756 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.069373e+01 |    Inf | unknown
+r 2.5s|     1 |     0 | 19389 |     - |simplero|   0 |3773 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.064630e+01 |    Inf | unknown
+r 2.5s|     1 |     0 | 19484 |     - |simplero|   0 |3773 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.062111e+01 |    Inf | unknown
+r 2.5s|     1 |     0 | 19552 |     - |simplero|   0 |3789 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.056686e+01 |    Inf | unknown
+r 2.5s|     1 |     0 | 19555 |     - |simplero|   0 |3789 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.056646e+01 |    Inf | unknown
+r 2.5s|     1 |     0 | 19603 |     - |simplero|   0 |3804 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.052516e+01 |    Inf | unknown
+r 2.5s|     1 |     0 | 19648 |     - |simplero|   0 |3820 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.049706e+01 |    Inf | unknown
+r 2.5s|     1 |     0 | 19687 |     - |simplero|   0 |3820 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.048171e+01 |    Inf | unknown
+r 2.5s|     1 |     0 | 19689 |     - |simplero|   0 |3820 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.048162e+01 |    Inf | unknown
+r 2.5s|     1 |     0 | 19693 |     - |simplero|   0 |3820 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.048154e+01 |    Inf | unknown
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+r 2.5s|     1 |     0 | 19751 |     - |simplero|   0 |3836 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.045017e+01 |    Inf | unknown
+r 2.5s|     1 |     0 | 19795 |     - |simplero|   0 |3850 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.043550e+01 |    Inf | unknown
+r 2.5s|     1 |     0 | 19822 |     - |simplero|   0 |3850 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.043322e+01 |    Inf | unknown
+r 2.5s|     1 |     0 | 19834 |     - |simplero|   0 |3850 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.043291e+01 |    Inf | unknown
+r 2.5s|     1 |     0 | 19906 |     - |simplero|   0 |3864 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.040076e+01 |    Inf | unknown
+r 2.5s|     1 |     0 | 19917 |     - |simplero|   0 |3864 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.040039e+01 |    Inf | unknown
+r 2.5s|     1 |     0 | 19963 |     - |simplero|   0 |3876 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.037536e+01 |    Inf | unknown
+r 2.5s|     1 |     0 | 19982 |     - |simplero|   0 |3876 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.037403e+01 |    Inf | unknown
+r 2.5s|     1 |     0 | 19983 |     - |simplero|   0 |3876 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.037403e+01 |    Inf | unknown
+r 2.5s|     1 |     0 | 20055 |     - |simplero|   0 |3887 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.036435e+01 |    Inf | unknown
+r 2.5s|     1 |     0 | 20067 |     - |simplero|   0 |3887 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.036318e+01 |    Inf | unknown
+r 2.5s|     1 |     0 | 20073 |     - |simplero|   0 |3887 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.036308e+01 |    Inf | unknown
+r 2.5s|     1 |     0 | 20112 |     - |simplero|   0 |3896 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.035153e+01 |    Inf | unknown
+r 2.5s|     1 |     0 | 20134 |     - |simplero|   0 |3896 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.035030e+01 |    Inf | unknown
+r 2.5s|     1 |     0 | 20175 |     - |simplero|   0 |3904 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.034342e+01 |    Inf | unknown
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+r 2.6s|     1 |     0 | 20197 |     - |simplero|   0 |3904 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.034161e+01 |    Inf | unknown
+r 2.6s|     1 |     0 | 20219 |     - |simplero|   0 |3904 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.034034e+01 |    Inf | unknown
+r 2.6s|     1 |     0 | 20239 |     - |simplero|   0 |3909 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.033902e+01 |    Inf | unknown
+r 2.6s|     1 |     0 | 20276 |     - |simplero|   0 |3915 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.033241e+01 |    Inf | unknown
+r 2.6s|     1 |     0 | 20283 |     - |simplero|   0 |3915 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.033238e+01 |    Inf | unknown
+r 2.6s|     1 |     0 | 20305 |     - |simplero|   0 |3922 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.033144e+01 |    Inf | unknown
+r 2.6s|     1 |     0 | 20311 |     - |simplero|   0 |3922 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.033139e+01 |    Inf | unknown
+r 2.6s|     1 |     0 | 20313 |     - |simplero|   0 |3922 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.033138e+01 |    Inf | unknown
+r 2.6s|     1 |     0 | 20326 |     - |simplero|   0 |3926 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.032864e+01 |    Inf | unknown
+r 2.6s|     1 |     0 | 20328 |     - |simplero|   0 |3926 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.032861e+01 |    Inf | unknown
+r 2.6s|     1 |     0 | 20345 |     - |simplero|   0 |3930 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.032723e+01 |    Inf | unknown
+r 2.6s|     1 |     0 | 20348 |     - |simplero|   0 |3930 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.032723e+01 |    Inf | unknown
+r 2.6s|     1 |     0 | 20361 |     - |simplero|   0 |3935 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.032698e+01 |    Inf | unknown
+r 2.6s|     1 |     0 | 20369 |     - |simplero|   0 |3939 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.032686e+01 |    Inf | unknown
+r 2.6s|     1 |     0 | 20375 |     - |simplero|   0 |3940 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.032645e+01 |    Inf | unknown
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+r 2.6s|     1 |     0 | 20379 |     - |simplero|   0 |3943 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.032644e+01 |    Inf | unknown
+r 2.6s|     1 |     0 | 20381 |     - |simplero|   0 |3944 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.032644e+01 |    Inf | unknown
+r 2.6s|     1 |     0 | 20384 |     - |simplero|   0 |3946 | 170 | 170 |   0 |  0 |   0 |   0 |      --      | 5.032644e+01 |    Inf | unknown
+  2.6s|     1 |     0 | 20384 |     - |    25M |   0 |3946 | 170 | 170 |   0 |  0 |   0 |   0 | 5.032644e+01 | 5.032644e+01 |   0.00%| unknown
+  2.6s|     1 |     0 | 20384 |     - |    25M |   0 |3946 | 170 | 170 |   0 |  0 |   0 |   0 | 5.032644e+01 | 5.032644e+01 |   0.00%| unknown
+
+SCIP Status        : problem is solved [optimal solution found]
+Solving Time (sec) : 2.62
+Solving Nodes      : 1
+Primal Bound       : +5.03264415934541e+01 (209 solutions)
+Dual Bound         : +5.03264415934541e+01
+Gap                : 0.00 %
+
+written transformed problem to file <results_rootrelaxation/bin018_090_027.srr.lp>
+written transformed problem to file <results_rootrelaxation/bin018_090_027.srr.cip>
+
+written solution information to file <results_rootrelaxation/bin018_090_027.srr.sol>
+
+
+

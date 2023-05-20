@@ -1,0 +1,16 @@
+solution status: optimal solution found
+objective value:                                    6
+_var1_                                           0.25 	(obj:2)
+_var13_                                          0.25 	(obj:2)
+_var15_                                           0.5 	(obj:2)
+_var19_                                          0.25 	(obj:1)
+_var21_                                          0.25 	(obj:0)
+_var28_                                          0.25 	(obj:1)
+_var29_                                           0.5 	(obj:2)
+_var36_                                          0.75 	(obj:0)
+_var40_                                          0.25 	(obj:1)
+_var42_                                          0.25 	(obj:1)
+_var47_                                           0.5 	(obj:1)
+_var49_                                          0.25 	(obj:2)
+_var51_                                          0.25 	(obj:2)
+_var52_                                           0.5 	(obj:1)
