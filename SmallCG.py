@@ -27,11 +27,6 @@ def make_costdict(file):
             costdict[(int(e[0]), int(e[1]), int(e[2]))] = 1
         else:
             costdict[(int(e[1]), int(e[0]), int(e[2]))] = 1
-    for i in range(n - 1):
-        for j in range(i + 1, n):
-            for r in range(n - 1):
-                costdict[(i, j, r)] = costdict.get((i, j, r), 0)
-
     return costdict
 
 
@@ -120,11 +115,105 @@ def find_violation(n, alpha, beta, gamma):
     return violated
 
 
+def solve_dual(model, n, edges, costdict, violated):
+    # Initialise totalsum
+    totalsum = 1
+    print(costdict)
+    print(violated)
+
+    while totalsum > 0.01:
+        dual_edge = dict()
+        dual_pair = dict()
+        model.update()
+        model.optimize()
+        print(model.Pi)
+        # dual vars for rounds constraints
+        dual_r = model.Pi[:n - 1]
+        # dual vars for match constraints
+        dual_m = model.Pi[n - 1:n + int((n - 1) * n / 2) - 1]
+        # dual vars for the cut constraints
+        dual_c = model.Pi[n + int((n - 1) * n / 2) - 1:]
+
+        for r in range(n-1):
+            for k in range(len(violated)):
+                if violated[k][2] != r:
+                    dual_edge[(edges.index(violated[k][0]),r)] = dual_edge.get((edges.index(violated[k][0]), r), 0) + dual_c[k]
+                    dual_pair[(edges.index(violated[k][0]), edges.index(violated[k][1]), r)] = \
+                        dual_pair.get((edges.index(violated[k][0]), edges.index(violated[k][1]), r), 0) - dual_c[k]
+                else:
+                    dual_pair[(edges.index(violated[k][0]), edges.index(violated[k][1]), r)] = \
+                        dual_pair.get((edges.index(violated[k][0]), edges.index(violated[k][1]), r), 0) + dual_c[k]
+            for e in range(len(edges)):
+                dual_edge[(e, r)] = dual_edge.get((e, r), 0) + dual_m[e] + costdict.get((edges[e][0], edges[e][1], r), 0)
+
+        for r in range(n - 1):
+            print('Trying round', r)
+            maxdual = Model("dual")
+            maxdual.ModelSense = GRB.MAXIMIZE
+            maxdual.Params.LogToConsole = 0
+            x = maxdual.addVars(range(len(edges)), vtype=GRB.BINARY, name='x')
+            maxdual.setObjective(dual_r[r] - quicksum(dual_c[k] for k in range(len(violated)) if violated[k][2] != r)
+                                 + quicksum(dual_edge[(e, r)]*x[e] for e in range(len(edges)))
+                                 + quicksum(dual_pair[(edges.index(violated[k][0]), edges.index(violated[k][1]), r)]* x[edges.index(violated[k][0])]
+                                            *x[edges.index(violated[k][1])] for k in range(len(violated))))
+            maxdual.addConstrs((quicksum(x[e] for e in range(len(edges)) if v in edges[e]) == 1 for v in range(n)), 'matching')
+
+            maxdual.update()
+            maxdual.optimize()
+
+            totalsum = maxdual.objVal
+            print(totalsum)
+
+            if totalsum > 0.01:
+                nam = '_var' + str(len(model.getVars())) + '_'
+
+                # Make a new variable corresponding to the matching and round
+                model.addVar(vtype="CONTINUOUS", lb=0, ub=1, name=nam)
+                model.update()
+                print(nam)
+
+                es = []
+                for var in maxdual.getVars():
+                    if var.x > 0.5:
+                        print(var)
+                        if 'x[' in var.VarName:
+                            es.append(edges[int(var.varName[2:-1])])
+
+                matchcost = 0
+
+                # Update the constraints and objective value
+                con = model.getConstrs()
+                print(r, con[r])
+                model.chgCoeff(con[r], model.getVars()[-1], 1)
+                for edge in es:
+                    matchcost += costdict.get((edge[0], edge[1], r), 0)
+                    index = edges.index(edge) + n - 1
+                    print(edge, con[index])
+                    model.chgCoeff(con[index], model.getVars()[-1], 1)
+                for k in range(len(violated)):
+                    index = n + int((n - 1) * n / 2) + k - 1
+                    (m3, m4, r1) = violated[k]
+                    print(m3, m4, r1, con[index])
+                    if len(set(es).intersection({m3, m4})) == 2 and r1 != r:
+                        print("negative", model.getVars()[-1])
+                        model.chgCoeff(con[index], model.getVars()[-1], -1)
+                    elif len(set(es).intersection({m3, m4})) == 0 and r1 == r:
+                        print("positive", model.getVarByName(nam))
+                        model.chgCoeff(con[index], model.getVarByName(nam), 1)
+                model.getVars()[-1].Obj = matchcost
+                model.update()
+                model.optimize()
+                break
+    return model
+
+
 def solve_dual2(model, n, edges, costdict, violated):
     # Initialise totalsum
     totalsum = 1
 
     while totalsum > 0.01:
+        model.optimize()
+        print(model.Pi)
         # dual vars for rounds constraints
         dual_r = model.Pi[:n - 1]
         # dual vars for match constraints
@@ -229,12 +318,12 @@ def solve_mod_cg(model, n, edges, vardict, costdict):
             model.addConstr(((quicksum(model.getVarByName(var) for var in vardict if (
                     mm1 not in vardict[var]['edges'] and mm2 not in vardict[var]['edges'] and r1 == vardict[var]['r']))
                               - quicksum(model.getVarByName(var) for var in vardict if (
-                                mm1 in vardict[var]['edges'] and mm2 in vardict[var]['edges']
-                                and vardict[var]['r'] in rsm))) >= 0), 'cut' + str(nrof_cuts))
+                            mm1 in vardict[var]['edges'] and mm2 in vardict[var]['edges']
+                            and vardict[var]['r'] in rsm))) >= 0), 'cut' + str(nrof_cuts))
             nrof_cuts += 1
         model.update()
         model.optimize()
-        model = solve_dual2(model, n, edges, costdict, all_violated)
+        model = solve_dual(model, n, edges, costdict, all_violated)
         objs.append(model.getObjective().getValue())
 
         # Update the variables in the vardict.
