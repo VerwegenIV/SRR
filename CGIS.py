@@ -1,8 +1,9 @@
 from gurobipy import *
 import math
 import SmallCG
-import networkx as nx
+import IndepSet
 import MakeInstance
+import networkx as nx
 import pandas as pd
 
 
@@ -37,60 +38,75 @@ def find_odd_cycle(vardict):
     return odd_cycle, odd_cycle_weight
 
 
-def solve_dual(model, n, edges, costdict, cycles):
-    totalsum = 1
-
-    while totalsum > 0.001:
-        # dual vars for rounds constraints
-        dual_r = model.Pi[:n - 1]
-        # dual vars for match constraints
-        dual_m = model.Pi[n - 1:n + int((n - 1) * n / 2) - 1]
-        # dual vars for the cut constraints
-        dual_c = model.Pi[n + int((n - 1) * n / 2) - 1:]
-
-        for r in range(n - 1):
-            print('Trying round', r)
-            G = nx.Graph()
-            for i in range(len(edges)):
-                G.add_edge(edges[i][0], edges[i][1], weight=dual_m[i] - costdict.get((edges[i][0], edges[i][1], r), 0))
-            match = nx.max_weight_matching(G, True)
-            weight = 0
-            for m in match:
-                weight += G[m[0]][m[1]]['weight']
-            print(match, weight)
-        totalsum = 0
-
-
-def solve_inst(cg, n, model, edges, costdict):
+def solve(n, model, edges):
     print('Solving')
     integer = 0
     it = 0
+    nrof_cuts = 0
     objs = [model.getObjective().getValue()]
     while not integer:
         it += 1
         vardict, posvar = SmallCG.construct_vardict(model, edges)
+
         odd_cycle, weight = find_odd_cycle(vardict)
-        print('found cycle', odd_cycle)
         if weight > 0.999:
-            return False, it, objs
-        model.addConstr(
-            (quicksum(model.getVarByName("_var" + var + "_") for var in odd_cycle) <= (len(odd_cycle) - 1) / 2), 'c')
+            # Find violated inequalities
+            alpha, beta, gamma = SmallCG.a_b_g(vardict)
+            violated = SmallCG.find_violation(n, alpha, beta, gamma)
+            if not violated:
+                return False, it, objs
+
+            # CG constraints
+            for (mm1, mm2, r1) in violated:
+                rsm = list(range(n - 1))
+                rsm.remove(r1)
+                model.addConstr(((quicksum(model.getVarByName(var) for var in posvar if (
+                        mm1 not in posvar[var]['edges'] and mm2 not in posvar[var]['edges'] and r1 == posvar[var]['r']))
+                                  - quicksum(model.getVarByName(var) for var in posvar if (
+                                mm1 in posvar[var]['edges'] and mm2 in posvar[var]['edges']
+                                and posvar[var]['r'] in rsm))) >= 0), 'cut' + str(nrof_cuts))
+                nrof_cuts += 1
+        else:
+            # cycle constraints
+            model.addConstr(
+                (quicksum(model.getVarByName("_var" + var + "_") for var in odd_cycle) <= (len(odd_cycle) - 1) / 2),
+                'c')
+
+
+        # # Find violated inequalities
+        # alpha, beta, gamma = SmallCG.a_b_g(vardict)
+        # violated = SmallCG.find_violation(n, alpha, beta, gamma)
+        # if not violated:
+        #     odd_cycle, weight = find_odd_cycle(vardict)
+        #     # cycle constraints
+        #     model.addConstr(
+        #         (quicksum(model.getVarByName("_var" + var + "_") for var in odd_cycle) <= (len(odd_cycle) - 1) / 2), 'c')
+        #     if weight > 0.999:
+        #         return False, it, objs
+        # else:
+        #     # CG constraints
+        #     for (mm1, mm2, r1) in violated:
+        #         rsm = list(range(n - 1))
+        #         rsm.remove(r1)
+        #         model.addConstr(((quicksum(model.getVarByName(var) for var in posvar if (
+        #                 mm1 not in posvar[var]['edges'] and mm2 not in posvar[var]['edges'] and r1 == posvar[var]['r']))
+        #                           - quicksum(model.getVarByName(var) for var in posvar if (
+        #                         mm1 in posvar[var]['edges'] and mm2 in posvar[var]['edges']
+        #                         and posvar[var]['r'] in rsm))) >= 0), 'cut' + str(nrof_cuts))
+        #         nrof_cuts += 1
         model.update()
         model.optimize()
-        if (cg):
-            model = solve_dual(model, n, edges, costdict, [])
         objs.append(model.getObjective().getValue())
+        integer = 1
         for var in model.getVars():
             if var.x > 0.001:
                 print(var)
-        integer = 1
-        for var in model.getVars():
-            if 0.001 < var.x < 0.999:
-                integer = 0
+                if var.x < 0.999:
+                    integer = 0
     return True, it, objs
 
 
-def solve_indep_set(cg=False):
+def solve_cgis():
     # list with models that have an initially fractional solution
     number_viol = []
     # list with models that have an initially integral solution
@@ -116,11 +132,8 @@ def solve_indep_set(cg=False):
                     file = 'bin0' + s + '_0' + str(p) + '0_00' + str(k) + '.srr.lp'
                 else:
                     file = 'bin0' + s + '_0' + str(p) + '0_0' + str(k) + '.srr.lp'
-                if not cg:
-                    model = MakeInstance.get_model(file, s)
-                    model.write('mod.lp')
-                else:
-                    model = read('results_rootrelaxation/' + file)
+                model = MakeInstance.get_model(file, s)
+                model.write('mod.lp')
                 model.Params.LogToConsole = 0
                 for var in model.getVars():
                     if 'var' not in var.VarName:
@@ -146,7 +159,7 @@ def solve_indep_set(cg=False):
                     # Find independent set violations
                     odd_cycle, weight = find_odd_cycle(vardict)
                     # Try to solve the instance
-                    solved, it, objs = solve_inst(cg, n, model, edges, costdict)
+                    solved, it, objs = solve(n, model, edges)
                     nrof_nonint_inst += 1
                     avg_iter += it
                     if solved:

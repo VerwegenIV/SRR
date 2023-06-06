@@ -1,5 +1,7 @@
 from gurobipy import *
 import math
+import pandas as pd
+import MakeInstance
 
 
 def make_costdict(file):
@@ -27,7 +29,8 @@ def make_costdict(file):
             costdict[(int(e[0]), int(e[1]), int(e[2]))] = 1
         else:
             costdict[(int(e[1]), int(e[0]), int(e[2]))] = 1
-    return costdict
+    print('COST', type(costdict))
+    return costdict, n
 
 
 # Get the parameters of the loaded model
@@ -127,14 +130,6 @@ def solve_dual(model, n, edges, costdict, violated):
         dual_edge = dict()
         dual_pair = dict()
 
-        #debug code
-        model.update()
-        model.optimize()
-        for var in model.getVars():
-            if var.x > 0.01:
-                print(var)
-        print('Duals:', model.Pi)
-
         # dual vars for rounds constraints
         dual_r = model.Pi[:n - 1]
         # dual vars for match constraints
@@ -143,17 +138,19 @@ def solve_dual(model, n, edges, costdict, violated):
         dual_c = model.Pi[n + int((n - 1) * n / 2) - 1:]
 
         # Fill the coefficient dictionaries
-        for r in range(n-1):
+        for r in range(n - 1):
             for k in range(len(violated)):
                 if violated[k][2] != r:
-                    dual_edge[(edges.index(violated[k][0]), r)] = dual_edge.get((edges.index(violated[k][0]), r), 0) + dual_c[k]
                     dual_pair[(edges.index(violated[k][0]), edges.index(violated[k][1]), r)] = \
                         dual_pair.get((edges.index(violated[k][0]), edges.index(violated[k][1]), r), 0) - dual_c[k]
                 else:
+                    dual_edge[(edges.index(violated[k][0]), r)] = dual_edge.get((edges.index(violated[k][0]), r), 0) - \
+                                                                  dual_c[k]
                     dual_pair[(edges.index(violated[k][0]), edges.index(violated[k][1]), r)] = \
                         dual_pair.get((edges.index(violated[k][0]), edges.index(violated[k][1]), r), 0) + dual_c[k]
             for e in range(len(edges)):
-                dual_edge[(e, r)] = dual_edge.get((e, r), 0) + dual_m[e] - costdict.get((edges[e][0], edges[e][1], r), 0)
+                dual_edge[(e, r)] = dual_edge.get((e, r), 0) + dual_m[e] - costdict.get((edges[e][0], edges[e][1], r),
+                                                                                        0)
         print(dual_edge, dual_pair)
 
         # For every round, construct the dual and check whether the matching with maximum value violates a constraint
@@ -166,11 +163,14 @@ def solve_dual(model, n, edges, costdict, violated):
             x = maxdual.addVars(range(len(edges)), vtype=GRB.BINARY, name='x')
             # Objective of dual_r[r] + dual_edge[e,r] * x_e + dual_pair[e,f,r] * x_e * x_f
             maxdual.setObjective(dual_r[r] - quicksum(dual_c[k] for k in range(len(violated)) if violated[k][2] != r)
-                                 + quicksum(dual_edge[(e, r)]*x[e] for e in range(len(edges)))
-                                 + quicksum(dual_pair[(edges.index(violated[k][0]), edges.index(violated[k][1]), r)]* x[edges.index(violated[k][0])]
-                                            *x[edges.index(violated[k][1])] for k in range(len(violated))))
+                                 + quicksum(dual_edge[(e, r)] * x[e] for e in range(len(edges)))
+                                 + quicksum(
+                dual_pair[(edges.index(violated[k][0]), edges.index(violated[k][1]), r)] * x[
+                    edges.index(violated[k][0])]
+                * x[edges.index(violated[k][1])] for k in range(len(violated))))
             # Constraint to make sure a perfect matching is chosen
-            maxdual.addConstrs((quicksum(x[e] for e in range(len(edges)) if v in edges[e]) == 1 for v in range(n)), 'matching')
+            maxdual.addConstrs((quicksum(x[e] for e in range(len(edges)) if v in edges[e]) == 1 for v in range(n)),
+                               'matching')
 
             maxdual.update()
             maxdual.optimize()
@@ -223,7 +223,7 @@ def solve_dual(model, n, edges, costdict, violated):
                 # Solve the primal again
                 model.update()
                 model.optimize()
-                #More debug code
+                # More debug code
                 model.write('test.lp')
                 totalsum = 0
                 break
@@ -231,7 +231,8 @@ def solve_dual(model, n, edges, costdict, violated):
 
 
 # Solve the models with column generation, adding all violated inequalities every iteration.
-def solve_mod_cg(model, n, edges, vardict, costdict):
+def solve_mod(cg, model, n, edges, costdict):
+    vardict, posvar = construct_vardict(model, edges)
     # Find violated inequalities
     alpha, beta, gamma = a_b_g(vardict)
     violated = find_violation(n, alpha, beta, gamma)
@@ -244,19 +245,24 @@ def solve_mod_cg(model, n, edges, vardict, costdict):
 
     # While there are violated inequalities
     while violated:
+        for var in model.getVars():
+            if var.x > 0.001:
+                print('VAR', var, vardict[var.varName])
+        print('VIOLATED', violated)
         # Add every violated inequality to the model and solve it again
         for (mm1, mm2, r1) in violated:
             rsm = list(range(n - 1))
             rsm.remove(r1)
-            model.addConstr(((quicksum(model.getVarByName(var) for var in vardict if (
-                    mm1 not in vardict[var]['edges'] and mm2 not in vardict[var]['edges'] and r1 == vardict[var]['r']))
-                              - quicksum(model.getVarByName(var) for var in vardict if (
-                            mm1 in vardict[var]['edges'] and mm2 in vardict[var]['edges']
-                            and vardict[var]['r'] in rsm))) >= 0), 'cut' + str(nrof_cuts))
+            model.addConstr(((quicksum(model.getVarByName(var) for var in posvar if (
+                    mm1 not in posvar[var]['edges'] and mm2 not in posvar[var]['edges'] and r1 == posvar[var]['r']))
+                              - quicksum(model.getVarByName(var) for var in posvar if (
+                            mm1 in posvar[var]['edges'] and mm2 in posvar[var]['edges']
+                            and posvar[var]['r'] in rsm))) >= 0), 'cut' + str(nrof_cuts))
             nrof_cuts += 1
         model.update()
         model.optimize()
-        model = solve_dual(model, n, edges, costdict, all_violated)
+        if (cg):
+            model = solve_dual(model, n, edges, costdict, all_violated)
         objs.append(model.getObjective().getValue())
 
         # Update the variables in the vardict.
@@ -266,19 +272,17 @@ def solve_mod_cg(model, n, edges, vardict, costdict):
         # Find violated inequalities
         alpha, beta, gamma = a_b_g(vardict)
         violated = find_violation(n, alpha, beta, gamma)
-        print(violated)
-        print(vardict)
         all_violated.extend(violated)
         it += 1
 
-    # If there are no more violated inequalities return the number of iterations, or 0 if the solution is fractional.
+    # If there are no more violated inequalities return the number of iterations and whether the model is solved.
     for var in model.getVars():
         if 0.001 < var.x < 0.999:
-            return 0, objs
-    return it, objs
+            return it, objs, False
+    return it, objs, True
 
 
-def solve_instances():
+def solve_instances(cg=False):
     # list with models that have an initially fractional solution
     number_viol = []
     # list with models that have an initially integer solution
@@ -287,18 +291,28 @@ def solve_instances():
     no_found = []
     # dictionary that keeps track of the number of violated inequalities and iterations of a fractional model
     nrof_viol = dict()
+    # dictionary that keeps the average iterations, average objective increase, and nrof instances solved per n
+    data_per_n = dict()
 
     # Iterate over all possible test cases
     # for s in ['06', '12', '18']:
     for s in ['06']:
-        for p in range(5,6):
-            for k in range(1):
+        for p in range(5, 10):
+            avg_iter = 0
+            nrof_nonint_inst = 0
+            avg_obj_incr = 0
+            nrof_solved = 0
+            for k in range(50):
                 print("DIT IS K,S,P", k, s, p)
                 if k < 10:
                     file = 'bin0' + s + '_0' + str(p) + '0_00' + str(k) + '.srr.lp'
                 else:
                     file = 'bin0' + s + '_0' + str(p) + '0_0' + str(k) + '.srr.lp'
-                model = read('results_rootrelaxation/' + file)
+                if not cg:
+                    model = MakeInstance.get_model(file, s)
+                    model.write('mod.lp')
+                else:
+                    model = read('results_rootrelaxation/' + file)
                 model.Params.LogToConsole = 0
                 for var in model.getVars():
                     if 'var' not in var.VarName:
@@ -307,22 +321,35 @@ def solve_instances():
                 model.optimize()
                 # Get the parameters and dictionaries
                 n, edges = get_params(model)
-                costdict = make_costdict(file)
+                costdict, np = make_costdict(file)
+                print(type(costdict))
                 vardict, posvar = construct_vardict(model, edges)
+                for var in model.getVars():
+                    if var.x > 0.0001:
+                        print(var, vardict[var.varName], var.Obj)
                 # If only n-1 variables are non-zero, there is an integer solution
                 if len(vardict) == n - 1:
                     int_sol.append((s, p, k))
                 else:
                     # Solve the problems with integer solution to optimality
-                    nrof_iter, objs = solve_mod_cg(model, n, edges, posvar, costdict)
-                    # nrof_iter, objs = solve_mod(model, n, posvar)
-                    # nrof_iter = 1
-                    # objs = model.getObjective().getValue()
+                    nrof_iter, objs, solved = solve_mod(cg, model, n, edges, costdict)
+                    nrof_nonint_inst += 1
+                    avg_iter += nrof_iter
+                    if solved:
+                        nrof_solved += 1
+                    avg_obj_incr += objs[-1] - objs[0]
                     alpha, beta, gamma = a_b_g(vardict)
                     violated = find_violation(n, alpha, beta, gamma)
                     if violated:
                         number_viol.append((s, p, k))
-                        nrof_viol[(s, p, k)] = {'nrof_viol': len(violated), 'nrof_iter': nrof_iter, 'objectives': objs}
+                        nrof_viol[(s, p, k)] = {'nrof_viol': len(violated), 'nrof_iter': nrof_iter, 'objectives': objs, 'solved': solved}
                     else:
                         no_found.append((s, p, k))
-    return len(number_viol), len(int_sol), no_found, nrof_viol
+            avg_obj_incr = avg_obj_incr / nrof_nonint_inst
+            avg_iter = avg_iter / nrof_nonint_inst
+            data_per_n[(s, p)] = {'nrof fractional instances': nrof_nonint_inst, 'average objective increase':
+                avg_obj_incr, 'average nrof iterations': avg_iter, 'nrof solved': nrof_solved}
+    print(len(number_viol), len(int_sol), no_found, nrof_viol, data_per_n)
+    df = pd.DataFrame.from_dict(data_per_n, orient="index")
+    print(df.to_latex())
+    return len(number_viol), len(int_sol), no_found, nrof_viol, data_per_n
