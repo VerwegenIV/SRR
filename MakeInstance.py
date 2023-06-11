@@ -3,17 +3,20 @@ import networkx as nx
 
 
 def make_matchings(G, match, matchings):
-    if not G.edges:
+    if not list(G.edges):
         matchingset = set(frozenset(i) for i in matchings)
         if set(match) not in matchingset:
             matchings.append(match)
+            print(len(matchings))
     else:
-        for edge in G.edges:
+        for nb in G[list(G.nodes)[0]]:
+            edge = (list(G.nodes)[0], nb)
+            print('adding', edge)
             H = nx.Graph(G)
             m = match.copy()
             m.append(edge)
             H.remove_nodes_from(edge)
-            make_matchings(H, m, matchings)
+            matchings = make_matchings(H, m, matchings)
     return matchings
 
 
@@ -33,10 +36,8 @@ def parse_data(data):
     return edge_one
 
 
-def get_vars(costs, n):
+def get_vars(matchings, costs, n):
     matchcost = dict()
-    G = nx.complete_graph(n)
-    matchings = make_matchings(G, [], [])
     for r in range(n - 1):
         for i in range(len(matchings)):
             for j in range(len(matchings[i])):
@@ -44,7 +45,7 @@ def get_vars(costs, n):
                     matchcost[r * len(matchings) + i] = matchcost.get(r * len(matchings) + i, 0) + 1
                 else:
                     matchcost[r * len(matchings) + i] = matchcost.get(r * len(matchings) + i, 0)
-    return list(G.edges), matchings, matchcost
+    return matchcost
 
 
 def make_model(n, edges, matchings, costs):
@@ -65,12 +66,13 @@ def make_model(n, edges, matchings, costs):
     return model
 
 
-def get_model(file, s):
+def get_model(edges, matchings, file, s):
     n = int(s)
     data = open('Instances/' + file[:-3])
     data = data.read()
     data = data[len(str(n)) + 1:-1].split('\n')
     costs = parse_data(data)
-    edges, matchings, costs = get_vars(costs, n)
-    model = make_model(n, edges, matchings, costs)
+    mcosts = get_vars(matchings, costs, n)
+    model = make_model(n, edges, matchings, mcosts)
     return model
+

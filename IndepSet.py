@@ -4,6 +4,7 @@ import SmallCG
 import networkx as nx
 import MakeInstance
 import pandas as pd
+import time
 
 
 def find_odd_cycle(vardict):
@@ -37,7 +38,7 @@ def find_odd_cycle(vardict):
     return odd_cycle, odd_cycle_weight
 
 
-def solve_dual(model, n, edges, costdict, cycles):
+def solve_dual(model, n, edges, costdict, posvar):
     totalsum = 1
 
     while totalsum > 0.001:
@@ -45,20 +46,73 @@ def solve_dual(model, n, edges, costdict, cycles):
         dual_r = model.Pi[:n - 1]
         # dual vars for match constraints
         dual_m = model.Pi[n - 1:n + int((n - 1) * n / 2) - 1]
-        # dual vars for the cut constraints
-        dual_c = model.Pi[n + int((n - 1) * n / 2) - 1:]
 
         for r in range(n - 1):
             print('Trying round', r)
-            G = nx.Graph()
-            for i in range(len(edges)):
-                G.add_edge(edges[i][0], edges[i][1], weight=dual_m[i] - costdict.get((edges[i][0], edges[i][1], r), 0))
-            match = nx.max_weight_matching(G, True)
-            weight = 0
-            for m in match:
-                weight += G[m[0]][m[1]]['weight']
-            print(match, weight)
-        totalsum = 0
+            maxdual = Model("dual")
+            maxdual.ModelSense = GRB.MAXIMIZE
+            maxdual.Params.LogToConsole = 0
+
+            x = maxdual.addVars(range(len(edges)), vtype=GRB.BINARY, name='x')
+            v = maxdual.addVars(posvar, vtype=GRB.INTEGER, name='v')
+            # Objective of dual_r[r] + sum_m(dual_m[m] - cost[m])*x[m]
+            maxdual.setObjective(dual_r[r] + quicksum((dual_m[e] - costdict.get((edges[e][0], edges[e][1], r), 0))*x[e]
+                                                      for e in range(len(edges))))
+            # Constraint to make sure a perfect matching is chosen
+            maxdual.addConstrs((quicksum(x[e] for e in range(len(edges)) if v in edges[e]) == 1 for v in range(n)),
+                               'matching')
+            maxdual.addConstrs((v[key] - quicksum(x[e] for e in range(len(edges)) if edges[e] in posvar[key]['edges'])
+                                == 0 for key in posvar), 'AND')
+            maxdual.addConstrs((v[key] <= n/2 - 1 for key in posvar), 'NoVar')
+
+            maxdual.update()
+            maxdual.optimize()
+
+            if maxdual.Status == 3:
+                return model
+
+            totalsum = maxdual.ObjVal
+            print(totalsum)
+            for var in maxdual.getVars():
+                if var.x > 0.001:
+                    print(var.varName, var.x)
+
+            if totalsum > 0.01:
+                nam = '_var' + str(len(model.getVars())) + '_'
+
+                # Make a new variable corresponding to the matching and round
+                model.addVar(vtype="CONTINUOUS", lb=0, ub=1, name=nam)
+                model.update()
+                print(nam)
+
+                # put the edges in the matching into a list
+                es = []
+                for var in maxdual.getVars():
+                    if var.varName[0] != 'v':
+                        if var.x > 0.5:
+                            print(var)
+                            es.append(edges[int(var.varName[2:-1])])
+
+                matchcost = 0
+
+                # Update the constraints and objective value
+                con = model.getConstrs()
+                print(r, con[r])
+                # Add the variable to its round constraint
+                model.chgCoeff(con[r], model.getVars()[-1], 1)
+                # For every match in the matching, add the variable to the match constraint
+                for edge in es:
+                    matchcost += costdict.get((edge[0], edge[1], r), 0)
+                    index = edges.index(edge) + n - 1
+                    print(edge, con[index])
+                    model.chgCoeff(con[index], model.getVars()[-1], 1)
+                # Add the variable to the objective function
+                model.getVars()[-1].Obj = matchcost
+                # Solve the primal again
+                model.update()
+                model.optimize()
+                break
+    return model
 
 
 def solve_inst(cg, n, model, edges, costdict):
@@ -78,8 +132,8 @@ def solve_inst(cg, n, model, edges, costdict):
         model.update()
         model.optimize()
         if (cg):
-            model = solve_dual(model, n, edges, costdict, [])
-        objs.append(model.getObjective().getValue())
+            model = solve_dual(model, n, edges, costdict, posvar)
+        objs.append(model.ObjVal)
         for var in model.getVars():
             if var.x > 0.001:
                 print(var)
@@ -104,12 +158,15 @@ def solve_indep_set(cg=False):
 
     # Iterate over all possible test cases
     # for s in ['06', '12', '18']:
-    for s in ['06']:
+    for s in ['06', '12']:
+        G = nx.complete_graph(int(s))
+        matchings = MakeInstance.make_matchings(G, [], [])
         for p in range(5, 10):
-            avg_iter = 0
             nrof_nonint_inst = 0
-            avg_obj_incr = 0
             nrof_solved = 0
+            avg_rel_obj = 0
+            avg_cg_obj = 0
+            algtime = 0
             for k in range(50):
                 print("DIT IS K, S, P", k, s, p)
                 if k < 10:
@@ -117,7 +174,7 @@ def solve_indep_set(cg=False):
                 else:
                     file = 'bin0' + s + '_0' + str(p) + '0_0' + str(k) + '.srr.lp'
                 if not cg:
-                    model = MakeInstance.get_model(file, s)
+                    model = MakeInstance.get_model(list(G.edges), matchings, file, s)
                     model.write('mod.lp')
                 else:
                     model = read('results_rootrelaxation/' + file)
@@ -127,13 +184,14 @@ def solve_indep_set(cg=False):
                         model.remove(var)
                 model.update()
                 model.optimize()
+                obj = model.getObjective().getValue()
                 for var in model.getVars():
                     if var.x > 0:
                         print(var)
                 # Get the parameters and dictionaries
                 n, edges = SmallCG.get_params(model)
                 vardict, posvar = SmallCG.construct_vardict(model, edges)
-                costdict = SmallCG.make_costdict(file)
+                costdict, n = SmallCG.make_costdict(file)
 
                 for var in model.getVars():
                     if var.x > 0:
@@ -146,21 +204,23 @@ def solve_indep_set(cg=False):
                     # Find independent set violations
                     odd_cycle, weight = find_odd_cycle(vardict)
                     # Try to solve the instance
+                    starttime = time.time()
                     solved, it, objs = solve_inst(cg, n, model, edges, costdict)
+                    algtime += time.time() - starttime
                     nrof_nonint_inst += 1
-                    avg_iter += it
                     if solved:
                         nrof_solved += 1
-                    avg_obj_incr += objs[-1] - objs[0]
+                    avg_rel_obj += obj
+                    avg_cg_obj += objs[-1]
                     if weight < 0.999:
                         number_viol.append((s, p, k))
                         nrof_viol[(s, p, k)] = {'nrof_iterations': it, 'solved': solved}
                     else:
                         no_found.append((s, p, k))
-            avg_obj_incr = avg_obj_incr / nrof_nonint_inst
-            avg_iter = avg_iter / nrof_nonint_inst
-            data_per_n[(s, p)] = {'nrof fractional instances': nrof_nonint_inst, 'average objective increase':
-                avg_obj_incr, 'average nrof iterations': avg_iter, 'nrof solved': nrof_solved}
+            algtime = algtime / nrof_nonint_inst
+            avg_rel_obj = round(avg_rel_obj / nrof_nonint_inst, 3)
+            avg_cg_obj = round(avg_cg_obj / nrof_nonint_inst, 3)
+            data_per_n[(s, p)] = {'nrof fractional instances': nrof_nonint_inst,  'nrof solved': nrof_solved, 'avg obj rel' : avg_rel_obj, 'avg obj cg' : avg_cg_obj, 'avg time': algtime}
     print(len(number_viol), len(int_sol), no_found, nrof_viol, data_per_n)
     df = pd.DataFrame.from_dict(data_per_n, orient="index")
     print(df.to_latex())

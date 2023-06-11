@@ -2,6 +2,8 @@ from gurobipy import *
 import math
 import pandas as pd
 import MakeInstance
+import networkx as nx
+import time
 
 
 def make_costdict(file):
@@ -175,7 +177,7 @@ def solve_dual(model, n, edges, costdict, violated):
             maxdual.update()
             maxdual.optimize()
 
-            totalsum = maxdual.objVal
+            totalsum = maxdual.ObjVal
             print(totalsum)
 
             # If the matching found violates the dual constraint
@@ -223,9 +225,6 @@ def solve_dual(model, n, edges, costdict, violated):
                 # Solve the primal again
                 model.update()
                 model.optimize()
-                # More debug code
-                model.write('test.lp')
-                totalsum = 0
                 break
     return model
 
@@ -296,12 +295,15 @@ def solve_instances(cg=False):
 
     # Iterate over all possible test cases
     # for s in ['06', '12', '18']:
-    for s in ['06']:
+    for s in ['06', '12']:
+        G = nx.complete_graph(int(s))
+        matchings = MakeInstance.make_matchings(G, [], [])
         for p in range(5, 10):
-            avg_iter = 0
             nrof_nonint_inst = 0
-            avg_obj_incr = 0
             nrof_solved = 0
+            avg_rel_obj = 0
+            avg_cg_obj = 0
+            algtime = 0
             for k in range(50):
                 print("DIT IS K,S,P", k, s, p)
                 if k < 10:
@@ -309,7 +311,7 @@ def solve_instances(cg=False):
                 else:
                     file = 'bin0' + s + '_0' + str(p) + '0_0' + str(k) + '.srr.lp'
                 if not cg:
-                    model = MakeInstance.get_model(file, s)
+                    model = MakeInstance.get_model(list(G.edges), matchings, file, s)
                     model.write('mod.lp')
                 else:
                     model = read('results_rootrelaxation/' + file)
@@ -319,10 +321,10 @@ def solve_instances(cg=False):
                         model.remove(var)
                 model.update()
                 model.optimize()
+                obj = model.getObjective().getValue()
                 # Get the parameters and dictionaries
                 n, edges = get_params(model)
                 costdict, np = make_costdict(file)
-                print(type(costdict))
                 vardict, posvar = construct_vardict(model, edges)
                 for var in model.getVars():
                     if var.x > 0.0001:
@@ -332,12 +334,14 @@ def solve_instances(cg=False):
                     int_sol.append((s, p, k))
                 else:
                     # Solve the problems with integer solution to optimality
+                    starttime = time.time()
                     nrof_iter, objs, solved = solve_mod(cg, model, n, edges, costdict)
+                    algtime += time.time() - starttime
                     nrof_nonint_inst += 1
-                    avg_iter += nrof_iter
                     if solved:
                         nrof_solved += 1
-                    avg_obj_incr += objs[-1] - objs[0]
+                    avg_rel_obj += obj
+                    avg_cg_obj += objs[-1]
                     alpha, beta, gamma = a_b_g(vardict)
                     violated = find_violation(n, alpha, beta, gamma)
                     if violated:
@@ -345,10 +349,10 @@ def solve_instances(cg=False):
                         nrof_viol[(s, p, k)] = {'nrof_viol': len(violated), 'nrof_iter': nrof_iter, 'objectives': objs, 'solved': solved}
                     else:
                         no_found.append((s, p, k))
-            avg_obj_incr = avg_obj_incr / nrof_nonint_inst
-            avg_iter = avg_iter / nrof_nonint_inst
-            data_per_n[(s, p)] = {'nrof fractional instances': nrof_nonint_inst, 'average objective increase':
-                avg_obj_incr, 'average nrof iterations': avg_iter, 'nrof solved': nrof_solved}
+            algtime = algtime / nrof_nonint_inst
+            avg_rel_obj = round(avg_rel_obj / nrof_nonint_inst, 3)
+            avg_cg_obj = round(avg_cg_obj / nrof_nonint_inst, 3)
+            data_per_n[(s, p)] = {'nrof fractional instances': nrof_nonint_inst,  'nrof solved': nrof_solved, 'avg obj rel' : avg_rel_obj, 'avg obj cg' : avg_cg_obj, 'avg time': algtime}
     print(len(number_viol), len(int_sol), no_found, nrof_viol, data_per_n)
     df = pd.DataFrame.from_dict(data_per_n, orient="index")
     print(df.to_latex())
